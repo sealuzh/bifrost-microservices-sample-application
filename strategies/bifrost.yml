@@ -1,0 +1,142 @@
+---
+name: Webshop Redesign A/B Test
+deployment:
+ ref: mapping
+
+ services:
+  - ref: products
+  - ref: products_a
+  - ref: products_b
+
+strategies:
+ - name: Health Check
+   actions:
+    - request:
+        url: "http://products/"
+        status: 404
+        intervalTime: 5
+        intervalLimit: 12
+        threshold: 12
+
+ - name: Canary Launch
+   actions:
+    - AND:
+        actions:
+          - route:
+              from: products
+              to: products_a
+              intervalTime: 60
+              filters:
+                - traffic:
+                    percentage: 5
+
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_a_error
+                    query: request_errors{instance="products_a:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+
+          - route:
+              from: products
+              to: products_b
+              intervalTime: 60
+              filters:
+                - traffic:
+                    percentage: 5
+
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_b_error
+                    query: request_errors{instance="products_b:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+
+        onTrue: Load Test
+        onFalse: rollback
+
+ - name: Load Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 60
+
+     - route:
+         from: products
+         to: products_b
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 60
+
+ - name: A/B Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               sticky: true
+               percentage: 50
+         intervalTime: 60
+
+     - route:
+         from: products
+         to: products_b
+         filters:
+           - traffic:
+               sticky: true
+               percentage: 50
+         intervalTime: 60
+
+     - metric:
+         providers:
+           - prometheus:
+               name: a_sold
+               query: avg_over_time(products_sold{instance="products_a:80"}[60s])
+           - prometheus:
+               name: b_sold
+               query: avg_over_time(products_sold{instance="products_b:80"}[60s])
+
+         delay: 60
+         validator: "a_sold>=b_sold"
+         onTrue: Phased Rollout A
+         onFalse: Phased Rollout B
+
+ - name: Phased Rollout A
+   actions:
+      - route:
+          from: products
+          to: products_a
+          filters:
+            - traffic:
+                percentage: 5
+          intervalTime: 10
+          intervalLimit: 20
+          threshold: 20
+          onTrue: finish
+
+ - name: Phased Rollout B
+   actions:
+      - route:
+          from: products
+          to: products_b
+          filters:
+            - traffic:
+                percentage: 5
+          intervalTime: 10
+          intervalLimit: 20
+          threshold: 20
+          onTrue: finish

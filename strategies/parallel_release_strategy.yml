@@ -1,0 +1,83 @@
+---
+name: Webshop Redesign A/B Test
+deployment:
+  orchestrator:
+    proxy:
+      mapping:
+        products: products_proxy_1
+        auth: auth_proxy
+
+  services:
+    - ref: products
+    - ref: products_a
+
+strategies:
+ - name: Canary Launch
+   actions:
+    - AND:
+        actions:
+          - route:
+              from: products
+              to: products_a
+              intervalTime: 60
+              filters:
+                - traffic:
+                    percentage: 5
+
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_a_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+
+        onTrue: Load Test
+        onFalse: rollback
+
+ - name: Load Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 60
+
+ - name: A/B Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               sticky: true
+               percentage: 50
+         intervalTime: 60
+
+     - metric:
+         providers:
+           - prometheus:
+               name: a_sold
+               query: avg_over_time(products_sold{instance="products:80"}[60s])
+
+         delay: 60
+         validator: "a_sold==a_sold"
+         onTrue: Phased Rollout
+
+ - name: Phased Rollout
+   actions:
+      - route:
+          from: products
+          to: products_a
+          filters:
+            - traffic:
+                percentage: 5
+          intervalTime: 10
+          intervalLimit: 6
+          threshold: 6
+          onTrue: finish

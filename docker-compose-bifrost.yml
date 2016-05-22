@@ -1,0 +1,117 @@
+version: '2'
+services:
+  nginx:
+    image: jwilder/nginx-proxy
+    ports:
+     - 80:80
+    volumes:
+     - /var/run/docker.sock:/tmp/docker.sock
+
+  # Frontend Services
+  frontend:
+    build: ./frontend
+    env_file: .env_proxied
+
+  frontend_redesigned:
+    build: ./frontend
+    env_file: .env_proxied
+    environment:
+      VERSION: redesigned
+
+  # Products Services
+  products:
+    build: ./products
+    env_file: .env_proxied
+
+  products_a:
+    build: ./products
+    env_file: .env_proxied
+    environment:
+      VERSION: a
+
+  products_b:
+    build: ./products
+    env_file: .env_proxied
+    environment:
+      VERSION: b
+
+  # Auth Service
+  auth:
+    build: ./auth
+    env_file: .env_proxied
+    environment:
+      VIRTUAL_HOST: auth.bifrost.com
+
+  # Search Service
+  search:
+    build: ./search
+    env_file: .env_proxied
+
+  # Mongo DB Service
+  mongo:
+    image: mongo:3.2.1
+    volumes:
+      - ./data:/data/db
+
+  # cAdvisor Docker Metrics
+  cadvisor:
+    image: google/cadvisor:latest
+    expose:
+     - "8080"
+    volumes:
+     - /:/rootfs
+     - /var/run:/var/run
+     - /sys:/sys
+     - /var/lib/docker/:/var/lib/docker
+
+  # Metrics Collector
+  prometheus:
+    build: ./prometheus
+    ports:
+     - '9090:9090'
+
+  ### bifrost-engine ###
+  bifrost:
+   tty: true
+   image: bifrostuzh/engine
+   ports:
+    - '8181:8181'
+   environment:
+    NODE_ENV: production
+    PROMETHEUS: 'http://prometheus:9090'
+    PORT: '8181'
+    PROXY_API_PORT: 9090
+    LOG_LEVEL: info
+
+  ### bifrost ###
+  frontend_proxy:
+   tty: true
+   image: bifrostuzh/proxy
+   expose:
+    - '80'
+   environment:
+     NODE_ENV: production
+     PROXIED_HOST: frontend
+     PROXIED_PORT: '80'
+     VIRTUAL_HOST: frontend.bifrost.com
+
+  products_proxy:
+   tty: true
+   image: bifrostuzh/proxy
+   expose:
+    - '80'
+   environment:
+     NODE_ENV: production
+     PROXIED_HOST: products
+     PROXIED_PORT: '80'
+     VIRTUAL_HOST: products.bifrost.com
+
+  search_proxy:
+   tty: true
+   image: bifrostuzh/proxy
+   expose:
+    - '80'
+   environment:
+     NODE_ENV: production
+     PROXIED_HOST: search
+     PROXIED_PORT: '80'

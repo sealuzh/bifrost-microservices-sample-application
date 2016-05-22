@@ -1,0 +1,19 @@
+---
+name: Switch to new Frontend 50/50
+deployment:
+ ref: mapping
+
+ services:
+  - ref: frontend
+  - ref: frontend_redesigned
+
+strategies:
+ - name: filterTraffic
+   actions:
+    - route:
+        from: frontend
+        to: frontend_redesigned
+        intervalTime: 20
+        filters:
+          - traffic:
+              percentage: 50

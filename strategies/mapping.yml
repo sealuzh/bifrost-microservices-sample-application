@@ -1,0 +1,7 @@
+---
+orchestrator:
+  proxy:
+    mapping:
+      frontend: frontend_proxy
+      products: products_proxy
+      auth: auth_proxy

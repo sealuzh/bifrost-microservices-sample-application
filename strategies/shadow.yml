@@ -1,0 +1,32 @@
+---
+name: Webshop Redesign A/B Test
+deployment:
+ ref: mapping
+
+ services:
+  - ref: frontend
+  - ref: products
+  - ref: products_a
+  - ref: products_b
+  - ref: auth
+
+strategies:
+ - name: load_test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 60
+
+     - route:
+         from: products
+         to: products_b
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 60

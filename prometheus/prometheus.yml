@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: exporter-metrics
+
+rule_files:
+
+scrape_configs:
+- job_name: prometheus
+  scrape_interval: 5s
+
+  target_groups:
+    - targets: ['products:80', 'products_a:80', 'products_b:80', 'cadvisor:8080']

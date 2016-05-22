@@ -1,0 +1,21 @@
+---
+name: Webshop Redesign A/B Test
+deployment:
+ ref: mapping
+
+ services:
+  - ref: frontend
+  - ref: products
+  - ref: products_a
+  - ref: products_b
+
+strategies:
+ - name: filterTraffic
+   actions:
+    - route:
+        from: products
+        to: products_a
+        persistance: true
+        filters:
+          - traffic:
+              percentage: 50

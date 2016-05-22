@@ -1,0 +1,13 @@
+{
+  "name": "bifrost-microservices-sample-frontend",
+  "description": "",
+  "dependencies": {
+    "angular": "~1.5.0",
+    "bootstrap": "~3.3.6",
+    "holderjs": "~2.9.1",
+    "angular-resource": "~1.5.0",
+    "angular-jwt": "~0.0.9",
+    "angular-cookies": "~1.5.0",
+    "angular-ui-router": "~0.2.18"
+  }
+}

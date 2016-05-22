@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Detail {{product._id}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>#{{product._id}}</h3>
+            <p>
+                <img ng-src="img/{{product.image}}" class="img-responsive" style="height: 200px">
+            </p>
+            <p>
+                <span class="label label-default">{{product.buyers}} sold</span>
+            </p>
+            <p>
+                <button class="btn btn-block btn-default" href="products/{{product._id}}">Details</button>
+                <button class="btn btn-block btn-success" ng-click="buyProduct(product)">Buy</button>
+            </p>
+        </div>
+    </div>
+</div>

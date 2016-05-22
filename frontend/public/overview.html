@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Webshop | Frontend</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" ng-show="!isAuthenticated()">
+            <form class="form-inline">
+                <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" ng-model="customer.email" placeholder="E-Mail" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" ng-model="customer.password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+            </form>
+        </div>
+        <div class="col-xs-12" ng-show="isAuthenticated()">
+            <button class="btn btn-default" ng-click="logout()">
+                Logout
+            </button>
+        </div>
+        <div class="col-xs-4" ng-repeat="product in products" ng-show="isAuthenticated()">
+            <h3>#{{product._id}}</h3>
+            <p>
+                <img ng-src="img/{{product.image}}" class="img-responsive" style="height: 200px">
+            </p>
+            <p>
+                <button class="btn btn-block btn-default" ui-sref="detail({id: product._id})">Details</button>
+                <button class="btn btn-block btn-success" ng-click="buyProduct(product)">Buy</button>
+            </p>
+        </div>
+    </div>
+</div>

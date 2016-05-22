@@ -1,0 +1,1310 @@
+---
+name: Experiment 3
+deployment:
+  orchestrator:
+    proxy:
+      mapping:
+        products: products_proxy_1
+        auth: auth_proxy
+
+  services:
+    - ref: products
+    - ref: products_a
+
+strategies:
+ - name: Phase 1
+   actions:
+    - AND:
+        actions:
+          - route:
+              from: products
+              to: products_a
+              intervalTime: 60
+              filters:
+                - traffic:
+                    percentage: 25
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+        onTrue: Phase 2
+        onFalse: rollback
+ - name: Phase 2
+   actions:
+    - AND:
+        actions:
+          - route:
+              from: products
+              to: products_a
+              intervalTime: 60
+              filters:
+                - traffic:
+                    percentage: 50
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - request:
+              url: "http://products/"
+              status: 404
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_error
+                    query: request_errors{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "<5"
+          - metric:
+              providers:
+                - prometheus:
+                    name: total_requests
+                    query: http_requests_total
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">=0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: a_cpu_load
+                    query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products"}[30s])
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+          - metric:
+              providers:
+                - prometheus:
+                    name: instance_up
+                    query: up{instance="products:80"}
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: "=1"
+          - metric:
+              providers:
+                - prometheus:
+                    name: start_time
+                    query: container_start_time_seconds{com_docker_compose_service="products"}	
+              intervalTime: 5
+              intervalLimit: 12
+              threshold: 12
+              validator: ">0"
+        onTrue: finish
+        onFalse: rollback

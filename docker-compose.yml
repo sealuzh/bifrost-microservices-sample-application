@@ -1,0 +1,49 @@
+nginx:
+  image: jwilder/nginx-proxy
+  ports:
+   - 80:80
+  volumes:
+   - /var/run/docker.sock:/tmp/docker.sock
+
+frontend:
+  build: ./frontend
+  env_file: .env
+  environment:
+    VIRTUAL_HOST: frontend.bifrost.com
+
+products:
+  build: ./products
+  env_file: .env
+  links:
+    - mongo
+    - auth
+    - search
+  environment:
+    VIRTUAL_HOST: products.bifrost.com
+
+search:
+  build: ./search
+  env_file: .env
+  links:
+    - mongo
+    - auth
+
+auth:
+  build: ./auth
+  env_file: .env
+  links:
+    - mongo
+  environment:
+    VIRTUAL_HOST: auth.bifrost.com
+
+mongo:
+    image: mongo:3.2.1
+    volumes:
+    - ./data:/data/db
+
+prometheus:
+  build: ./prometheus
+  ports:
+   - '9090:9090'
+  links:
+   - products

@@ -1,0 +1,16 @@
+.idea
+
+auth/.env
+auth/node_modules
+products/.env
+products/node_modules
+frontend/.env
+frontend/node_modules
+frontend/public/bower_components
+search/.env
+search/node_modules
+results/requests
+jmeter.log
+results.jtl
+.RData
+.Rhistory

@@ -1,0 +1,177 @@
+---
+name: Webshop Redesign A/B Test
+deployment:
+ ref: mapping
+
+ services:
+  - ref: frontend
+  - ref: products
+  - ref: products_a
+  - ref: products_b
+
+strategies:
+ - name: Health Check
+   actions:
+    - request:
+        url: "http://products/metrics"
+        status: 200
+        intervalTime: 5
+        intervalLimit: 2
+        threshold: 2
+    - request:
+        url: "http://products_a/metrics"
+        status: 200
+        intervalTime: 5
+        intervalLimit: 2
+        threshold: 2
+    - request:
+        url: "http://products_b/metrics"
+        status: 200
+        intervalTime: 5
+        intervalLimit: 2
+        threshold: 2
+
+ - name: Canary Launch
+   actions:
+    - AND:
+        actions:
+          - route:
+              from: products
+              to: products_a
+              intervalTime: 30
+              filters:
+                - traffic:
+                    percentage: 5
+
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_a_error
+                    query: request_errors{instance="products_a:80"}
+              intervalTime: 5
+              intervalLimit: 6
+              threshold: 6
+              validator: "<5"
+
+          - route:
+              from: products
+              to: products_b
+              intervalTime: 30
+              filters:
+                - traffic:
+                    percentage: 5
+
+          - metric:
+              providers:
+                - prometheus:
+                    name: products_b_error
+                    query: request_errors{instance="products_b:80"}
+              intervalTime: 5
+              intervalLimit: 6
+              threshold: 6
+              validator: "<5"
+
+        onTrue: Load Test
+        onFalse: rollback
+
+ - name: Load Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 10
+
+     - route:
+         from: products
+         to: products_b
+         filters:
+           - traffic:
+               percentage: 100
+               shadow: true
+         intervalTime: 10
+
+     - metric:
+         providers:
+           - prometheus:
+               name: b_cpu_load
+               query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products_b"}[30s])
+
+         delay: 30
+         validator: <80
+         onTrue: A/B Test
+         onFalse: rollback
+
+     - metric:
+         providers:
+           - prometheus:
+               name: a_cpu_load
+               query: avg_over_time(container_cpu_system_seconds_total{com_docker_compose_service="products_a"}[30s])
+
+         delay: 30
+         validator: <80
+         onTrue: A/B Test
+         onFalse: rollback
+
+ - name: A/B Test
+   actions:
+     - route:
+         from: products
+         to: products_a
+         filters:
+           - traffic:
+               sticky: true
+               percentage: 50
+         intervalTime: 30
+
+     - route:
+         from: products
+         to: products_b
+         filters:
+           - traffic:
+               sticky: true
+               percentage: 50
+         intervalTime: 30
+
+     - metric:
+         providers:
+           - prometheus:
+               name: a_sold
+               query: avg_over_time(products_sold{instance="products_a:80"}[60s])
+           - prometheus:
+               name: b_sold
+               query: avg_over_time(products_sold{instance="products_b:80"}[60s])
+
+         delay: 60
+         validator: "a_sold>=b_sold"
+         onTrue: Phased Rollout A
+         onFalse: Phased Rollout B
+
+ - name: Phased Rollout A
+   actions:
+      - route:
+          from: products
+          to: products_a
+          filters:
+            - traffic:
+                percentage: 50
+          intervalTime: 1
+          intervalLimit: 20
+          threshold: 20
+          onTrue: finish
+
+ - name: Phased Rollout B
+   actions:
+      - route:
+          from: products
+          to: products_b
+          filters:
+            - traffic:
+                percentage: 50
+          intervalTime: 1
+          intervalLimit: 20
+          threshold: 20
+          onTrue: finish
